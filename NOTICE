@@ -1,2 +1,66 @@
 Dadvar
 Copyright 2026 Ashkan Aazami
+
+Licensed under the Apache License, Version 2.0; see LICENSE.
+
+
+Software derived from Laya
+--------------------------
+
+This product includes software derived from Laya:
+https://github.com/NandhaKishorM/laya
+Copyright Convai Innovations and Laya contributors. Licensed under Apache-2.0.
+Source revision: 573e5b62 (Laya 0.3.5).
+
+  * dadvar/ holds three modules of Laya's `laya` package (__init__.py, agent.py,
+    common.py), renamed to `dadvar` and modified. Each file carries a notice of
+    that change at the top; further changes are recorded in this repository's
+    history.
+  * data/sources.py takes the banking77, BoolQ and prompt-injections question
+    wording from Laya's benchmark scripts (research/scripts/bench_apps.py and
+    research/scripts/build_benchmark_nb.py).
+
+benchmarks/ and the rest of data/ are original to this project.
+
+
+Data formats and question wording from third parties
+----------------------------------------------------
+
+  * The row schema (id, state, questions, gold) and the gold answer format
+    follow the LocalLLaMA/typed-decisions dataset, Apache-2.0:
+    https://huggingface.co/datasets/LocalLLaMA/typed-decisions
+  * The HelpSteer2 attribute definitions quoted in data/sources.py are from
+    NVIDIA's dataset card, CC-BY-4.0:
+    https://huggingface.co/datasets/nvidia/HelpSteer2
+    The per-level wording is this project's.
+  * The request and answer shapes are TypeSafe's System One API, used through
+    the typesafe-sdk package (MIT), which is a dependency and is not included
+    here: https://github.com/typesafe-ai/typesafe-sdk-python
+
+
+Datasets
+--------
+
+No dataset content is included in this repository. Datasets are downloaded from
+Hugging Face at run time, at the revision each run records, and are used under
+their own licenses:
+
+  LocalLLaMA/typed-decisions            Apache-2.0
+  mteb/banking77                        MIT
+  mteb/amazon_massive_intent            Apache-2.0
+  mteb/amazon_massive_scenario          Apache-2.0
+  deepset/prompt-injections             Apache-2.0
+  nvidia/HelpSteer2                     CC-BY-4.0
+  prometheus-eval/Feedback-Collection   CC-BY-4.0
+  google/boolq                          CC-BY-SA-3.0 (evaluation only; see data/sources.py)
+
+
+Model weights
+-------------
+
+No model weights are included in this repository. The checkpoints this code
+loads are published separately by Convai Innovations under Apache-2.0 and are
+downloaded at run time: https://huggingface.co/convaiinnovations
+
+Their encoders are ModernBERT-large (Answer.AI, Apache-2.0) and mmBERT-base,
+fine-tuned by Convai Innovations.

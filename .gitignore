@@ -13,3 +13,20 @@ dist/
 .env
 *.log
 artifacts/
+
+# Local notes
+PARKED.md
+
+# Benchmark data cache and run outputs
+data/cache/
+benchmarks/results/
+
+# direnv (local only)
+.envrc
+
+# Training data and outputs
+training/data/
+training/runs/
+
+# Prediction cache
+benchmarks/cache/
