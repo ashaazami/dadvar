@@ -1,0 +1,55 @@
+# MultiNLI: premise and hypothesis; label 0 entailment, 1 neutral, 2 contradiction.
+
+source: multi_nli
+dataset: nyu-mll/multi_nli
+configs: [default]               # the dataset configs to load
+splits: {eval: validation_matched, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: 'per genre: cc-by-3.0, cc-by-sa-3.0, mit, other (OANC)'
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: false                # may train a model sold commercially: some genres cc-by-sa-3.0 or OANC terms
+default: false                   # left out of an `all` run unless named
+keep: labelled_nli               # drop rows the source cannot turn into a question, before sampling
+state:
+  premise: premise
+  hypothesis: hypothesis
+
+questions:
+
+  supports:
+    type: noul
+    level: 4
+    grade: 3
+    form: B
+    gold: {fn: flag, column: label, equals: 0}
+    wordings:
+      - Does `premise` support `hypothesis`?
+      - '`hypothesis` follows from `premise`.'
+      - If `premise` is true, is `hypothesis` true?
+    opposites:
+      - '`premise` does not support `hypothesis`.'
+
+  contradicts:
+    type: noul
+    level: 4
+    grade: 3
+    form: B
+    canonical: false
+    gold: {fn: flag, column: label, equals: 2}
+    wordings:
+      - Does `premise` contradict `hypothesis`?
+      - '`premise` and `hypothesis` cannot both be true.'
+    opposites:
+      - '`premise` does not contradict `hypothesis`.'
+
+  relation:
+    type: choice
+    level: 4
+    grade: 3
+    gold: {fn: choice, column: label, labels: [supported, neither, contradicted]}
+    wordings:
+      - How does `hypothesis` relate to `premise`?
+      - What does `premise` say about `hypothesis`?
+    criteria:
+      supported: '`premise` shows that `hypothesis` is true'
+      contradicted: '`premise` shows that `hypothesis` is false'
+      neither: '`premise` does not settle whether `hypothesis` is true'

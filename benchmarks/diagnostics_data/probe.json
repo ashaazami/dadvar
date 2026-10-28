@@ -1,0 +1,530 @@
+[
+ {
+  "id": "refund-email",
+  "state": {
+   "email": "Hi team, invoice #4471 charges us twice for the March license. Please issue a refund for the duplicate charge. Thanks, Priya"
+  },
+  "questions": {
+   "department": {
+    "type": "choice",
+    "instructions": "Which department should handle `email`?",
+    "criteria": {
+     "billing": null,
+     "technical_support": null,
+     "sales": null,
+     "legal": null,
+     "human_resources": null
+    }
+   },
+   "refund": {
+    "type": "noul",
+    "instructions": "Is the sender asking for money back?"
+   }
+  },
+  "gold": {
+   "department": "billing",
+   "refund": true
+  }
+ },
+ {
+  "id": "db-alert",
+  "state": {
+   "alert": "CPU on db-prod-3 has been at 99% for 45 minutes; p95 query latency rose from 40 ms to 2.3 s; customer checkouts are failing."
+  },
+  "questions": {
+   "severity": {
+    "type": "score",
+    "instructions": "How severe is `alert`?",
+    "criteria": [
+     "Informational",
+     "Low",
+     "High",
+     "Critical: customers are affected now"
+    ]
+   },
+   "customer_impact": {
+    "type": "noul",
+    "instructions": "Customers are affected by this incident."
+   }
+  },
+  "gold": {
+   "severity": 3,
+   "customer_impact": true
+  }
+ },
+ {
+  "id": "review-1star",
+  "state": {
+   "review": "Absolutely terrible. It broke on the first day and support never answered. Never buying from this brand again."
+  },
+  "questions": {
+   "stars": {
+    "type": "score",
+    "instructions": "How many stars would the author of `review` give?",
+    "criteria": [
+     "1 star",
+     "2 stars",
+     "3 stars",
+     "4 stars",
+     "5 stars"
+    ]
+   },
+   "sentiment": {
+    "type": "choice",
+    "instructions": "What is the sentiment of `review`?",
+    "criteria": {
+     "positive": null,
+     "negative": null,
+     "neutral": null,
+     "mixed": null,
+     "not_a_review": null
+    }
+   }
+  },
+  "gold": {
+   "stars": 0,
+   "sentiment": "negative"
+  }
+ },
+ {
+  "id": "review-5star",
+  "state": {
+   "review": "Fantastic blender. Crushes ice in seconds, easy to clean, and it looks great on the counter. Worth every penny."
+  },
+  "questions": {
+   "stars": {
+    "type": "score",
+    "instructions": "How many stars would the author of `review` give?",
+    "criteria": [
+     "1 star",
+     "2 stars",
+     "3 stars",
+     "4 stars",
+     "5 stars"
+    ]
+   },
+   "recommend": {
+    "type": "noul",
+    "instructions": "Would the author recommend this product?"
+   }
+  },
+  "gold": {
+   "stars": 4,
+   "recommend": true
+  }
+ },
+ {
+  "id": "review-3star",
+  "state": {
+   "review": "It's okay. It does the job, nothing more, nothing less."
+  },
+  "questions": {
+   "stars": {
+    "type": "score",
+    "instructions": "How many stars would the author of `review` give?",
+    "criteria": [
+     "1 star",
+     "2 stars",
+     "3 stars",
+     "4 stars",
+     "5 stars"
+    ]
+   },
+   "sentiment": {
+    "type": "choice",
+    "instructions": "What is the sentiment of `review`?",
+    "criteria": {
+     "positive": null,
+     "negative": null,
+     "neutral": null,
+     "mixed": null,
+     "not_a_review": null
+    }
+   }
+  },
+  "gold": {
+   "stars": 2,
+   "sentiment": "neutral"
+  }
+ },
+ {
+  "id": "code-diff",
+  "state": {
+   "diff": "-    if user.is_admin:\n+    if True:\n         delete_all_records()"
+  },
+  "questions": {
+   "security_risk": {
+    "type": "noul",
+    "instructions": "Does `diff` introduce a security risk?"
+   },
+   "removes_check": {
+    "type": "noul",
+    "instructions": "The change removes an authorization check."
+   }
+  },
+  "gold": {
+   "security_risk": true,
+   "removes_check": true
+  }
+ },
+ {
+  "id": "phishing",
+  "state": {
+   "email": "URGENT: Your bank account is locked. Verify your password within 24 hours at http://secure-bank-login.co/verify or you will lose access."
+  },
+  "questions": {
+   "phishing": {
+    "type": "noul",
+    "instructions": "Is `email` likely a phishing attempt?"
+   },
+   "category": {
+    "type": "choice",
+    "instructions": "What kind of email is this?",
+    "criteria": {
+     "newsletter": null,
+     "phishing": null,
+     "personal": null,
+     "receipt": null,
+     "job_offer": null
+    }
+   }
+  },
+  "gold": {
+   "phishing": true,
+   "category": "phishing"
+  }
+ },
+ {
+  "id": "receipt",
+  "state": {
+   "email": "Thanks for your order #88213. Your total was $42.17, charged to the Visa ending 4412. Estimated delivery: Friday."
+  },
+  "questions": {
+   "phishing": {
+    "type": "noul",
+    "instructions": "Is `email` likely a phishing attempt?"
+   },
+   "category": {
+    "type": "choice",
+    "instructions": "What kind of email is this?",
+    "criteria": {
+     "newsletter": null,
+     "phishing": null,
+     "personal": null,
+     "receipt": null,
+     "job_offer": null
+    }
+   }
+  },
+  "gold": {
+   "phishing": false,
+   "category": "receipt"
+  }
+ },
+ {
+  "id": "french",
+  "state": {
+   "text": "Je voudrais réserver une table pour deux personnes ce soir."
+  },
+  "questions": {
+   "language": {
+    "type": "choice",
+    "instructions": "Which language is `text` written in?",
+    "criteria": {
+     "English": null,
+     "French": null,
+     "Spanish": null,
+     "German": null,
+     "Italian": null
+    }
+   },
+   "reservation": {
+    "type": "noul",
+    "instructions": "The writer wants to make a reservation."
+   }
+  },
+  "gold": {
+   "language": "French",
+   "reservation": true
+  }
+ },
+ {
+  "id": "math-wrong",
+  "state": {
+   "claim": "A train travels 120 km in 2 hours, so its average speed is 50 km/h."
+  },
+  "questions": {
+   "correct": {
+    "type": "noul",
+    "instructions": "Is the arithmetic in `claim` correct?"
+   }
+  },
+  "gold": {
+   "correct": false
+  }
+ },
+ {
+  "id": "math-right",
+  "state": {
+   "claim": "A shirt costs $20 and is discounted by 25%, so the sale price is $15."
+  },
+  "questions": {
+   "correct": {
+    "type": "noul",
+    "instructions": "Is the arithmetic in `claim` correct?"
+   }
+  },
+  "gold": {
+   "correct": true
+  }
+ },
+ {
+  "id": "museum-tue",
+  "state": {
+   "passage": "The museum is closed on Mondays and open from 9am to 5pm on all other days.",
+   "question": "Can I visit the museum on Tuesday at 10am?"
+  },
+  "questions": {
+   "answer": {
+    "type": "noul",
+    "instructions": "Based on `passage`, is the answer to `question` yes?"
+   }
+  },
+  "gold": {
+   "answer": true
+  }
+ },
+ {
+  "id": "museum-mon",
+  "state": {
+   "passage": "The museum is closed on Mondays and open from 9am to 5pm on all other days.",
+   "question": "Can I visit the museum on Monday at noon?"
+  },
+  "questions": {
+   "answer": {
+    "type": "noul",
+    "instructions": "Based on `passage`, is the answer to `question` yes?"
+   }
+  },
+  "gold": {
+   "answer": false
+  }
+ },
+ {
+  "id": "vacation",
+  "state": {
+   "message": "I'd like to request vacation from June 3 to June 14 for my sister's wedding."
+  },
+  "questions": {
+   "request": {
+    "type": "choice",
+    "instructions": "What kind of HR request is `message`?",
+    "criteria": {
+     "leave_request": null,
+     "payroll_issue": null,
+     "complaint": null,
+     "resignation": null,
+     "benefits_question": null
+    }
+   },
+   "quitting": {
+    "type": "noul",
+    "instructions": "The employee is quitting the company."
+   }
+  },
+  "gold": {
+   "request": "leave_request",
+   "quitting": false
+  }
+ },
+ {
+  "id": "resignation",
+  "state": {
+   "message": "Please accept this letter as formal notice of my resignation. My last day will be May 30."
+  },
+  "questions": {
+   "request": {
+    "type": "choice",
+    "instructions": "What kind of HR request is `message`?",
+    "criteria": {
+     "leave_request": null,
+     "payroll_issue": null,
+     "complaint": null,
+     "resignation": null,
+     "benefits_question": null
+    }
+   },
+   "quitting": {
+    "type": "noul",
+    "instructions": "The employee is quitting the company."
+   }
+  },
+  "gold": {
+   "request": "resignation",
+   "quitting": true
+  }
+ },
+ {
+  "id": "insult",
+  "state": {
+   "comment": "You're an idiot and everyone here hates you."
+  },
+  "questions": {
+   "insulting": {
+    "type": "noul",
+    "instructions": "Is `comment` insulting?"
+   },
+   "category": {
+    "type": "choice",
+    "instructions": "Which moderation category fits `comment`?",
+    "criteria": {
+     "harassment": null,
+     "spam": null,
+     "self_harm": null,
+     "none": null,
+     "violent_threat": null
+    }
+   }
+  },
+  "gold": {
+   "insulting": true,
+   "category": "harassment"
+  }
+ },
+ {
+  "id": "spam",
+  "state": {
+   "comment": "Buy cheap followers now!!! 10k followers for $5, visit fast-likes.biz"
+  },
+  "questions": {
+   "insulting": {
+    "type": "noul",
+    "instructions": "Is `comment` insulting?"
+   },
+   "category": {
+    "type": "choice",
+    "instructions": "Which moderation category fits `comment`?",
+    "criteria": {
+     "harassment": null,
+     "spam": null,
+     "self_harm": null,
+     "none": null,
+     "violent_threat": null
+    }
+   }
+  },
+  "gold": {
+   "insulting": false,
+   "category": "spam"
+  }
+ },
+ {
+  "id": "essay-full",
+  "state": {
+   "essay": "Water evaporates from oceans, condenses into clouds, falls back as precipitation, and collects in rivers and oceans, where the cycle starts again."
+  },
+  "questions": {
+   "completeness": {
+    "type": "score",
+    "instructions": "How completely does `essay` explain the water cycle?",
+    "criteria": [
+     "Missing: no stage explained",
+     "Partial: one stage",
+     "Mostly complete: two or three stages",
+     "Complete: evaporation, condensation, precipitation and collection"
+    ]
+   }
+  },
+  "gold": {
+   "completeness": 3
+  }
+ },
+ {
+  "id": "essay-partial",
+  "state": {
+   "essay": "Water goes up into the sky."
+  },
+  "questions": {
+   "completeness": {
+    "type": "score",
+    "instructions": "How completely does `essay` explain the water cycle?",
+    "criteria": [
+     "Missing: no stage explained",
+     "Partial: one stage",
+     "Mostly complete: two or three stages",
+     "Complete: evaporation, condensation, precipitation and collection"
+    ]
+   }
+  },
+  "gold": {
+   "completeness": 1
+  }
+ },
+ {
+  "id": "flight",
+  "state": {
+   "itinerary": "Flight LH 400 departs Frankfurt 10:05 and arrives at New York JFK 12:50 local time. Passengers: 1 adult. Checked bags: 0."
+  },
+  "questions": {
+   "checked_bags": {
+    "type": "noul",
+    "instructions": "The passenger has checked luggage."
+   },
+   "destination": {
+    "type": "choice",
+    "instructions": "Which city is the destination of `itinerary`?",
+    "criteria": {
+     "London": null,
+     "New York": null,
+     "Tokyo": null,
+     "Frankfurt": null,
+     "Boston": null
+    }
+   }
+  },
+  "gold": {
+   "checked_bags": false,
+   "destination": "New York"
+  }
+ },
+ {
+  "id": "escalation",
+  "state": {
+   "conversation": [
+    {
+     "role": "user",
+     "content": "This is the third time I'm writing. Nothing works and I want to speak to a manager now."
+    }
+   ]
+  },
+  "questions": {
+   "wants_manager": {
+    "type": "noul",
+    "instructions": "Does the customer ask to talk to a manager?"
+   }
+  },
+  "gold": {
+   "wants_manager": true
+  }
+ },
+ {
+  "id": "trial",
+  "state": {
+   "abstract": "In a randomized trial of 1,200 adults, the drug lowered systolic blood pressure by 8 mmHg on average compared with placebo."
+  },
+  "questions": {
+   "lowered": {
+    "type": "noul",
+    "instructions": "The study found that the drug lowered blood pressure."
+   },
+   "children": {
+    "type": "noul",
+    "instructions": "The study included children."
+   }
+  },
+  "gold": {
+   "lowered": true,
+   "children": false
+  }
+ }
+]

@@ -1,0 +1,155 @@
+# Measuring Hate Speech: comments rated by several annotators each; `prepare` groups the ratings per
+# comment, and each question's gold is the distribution of the votes. Every scale runs from least to
+# most hateful (checked against the dataset's hate_speech_score).
+
+source: hate_speech
+dataset: ucberkeley-dlab/measuring-hate-speech
+configs: [default]               # the dataset configs to load
+splits: {eval: train, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: cc-by-4.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: cc-by-4.0
+default: false                   # left out of an `all` run unless named
+prepare: hate_speech_prepare     # reshape the whole split first
+state:
+  comment: {from: text, role: text}
+
+questions:
+
+  sentiment:
+    type: score
+    level: 1
+    grade: 1
+    gold: {fn: votes}
+    wordings:
+      - What is the overall sentiment of `comment`?
+    criteria:
+      - Strongly positive
+      - Somewhat positive
+      - Neutral
+      - Somewhat negative
+      - Strongly negative
+
+  respect:
+    type: score
+    level: 2
+    grade: 1
+    gold: {fn: votes}
+    wordings:
+      - How respectful is `comment` towards the people it is about?
+    criteria:
+      - Strongly respectful
+      - Somewhat respectful
+      - Neutral
+      - Somewhat disrespectful
+      - Strongly disrespectful
+
+  attack_defend:
+    type: score
+    level: 2
+    grade: 1
+    gold: {fn: votes}
+    wordings:
+      - Does `comment` defend or attack the people it is about?
+    criteria:
+      - Strongly defends them
+      - Somewhat defends them
+      - Neither
+      - Somewhat attacks them
+      - Strongly attacks them
+
+  status:
+    type: score
+    level: 2
+    grade: 1
+    gold: {fn: votes}
+    wordings:
+      - Does `comment` treat the people it is about as superior or inferior to others?
+    criteria:
+      - Strongly elevates their status
+      - Somewhat elevates their status
+      - Neither
+      - Somewhat implies they are inferior
+      - Strongly implies they are inferior
+
+  insult:
+    type: score
+    level: 1
+    grade: 1
+    gold: {fn: votes}
+    wordings:
+      - '`comment` insults the people it is about.'
+    criteria:
+      - Strongly disagree
+      - Disagree
+      - Neither agree nor disagree
+      - Agree
+      - Strongly agree
+
+  humiliate:
+    type: score
+    level: 2
+    grade: 1
+    gold: {fn: votes}
+    wordings:
+      - '`comment` humiliates the people it is about.'
+    criteria:
+      - Strongly disagree
+      - Disagree
+      - Neither agree nor disagree
+      - Agree
+      - Strongly agree
+
+  dehumanize:
+    type: score
+    level: 2
+    grade: 1
+    gold: {fn: votes}
+    wordings:
+      - '`comment` dehumanizes the people it is about, for example by comparing them to animals or objects.'
+    criteria:
+      - Strongly disagree
+      - Disagree
+      - Neither agree nor disagree
+      - Agree
+      - Strongly agree
+
+  violence:
+    type: score
+    level: 2
+    grade: 1
+    gold: {fn: votes}
+    wordings:
+      - '`comment` calls for violence against the people it is about.'
+    criteria:
+      - Strongly disagree
+      - Disagree
+      - Neither agree nor disagree
+      - Agree
+      - Strongly agree
+
+  genocide:
+    type: score
+    level: 2
+    grade: 1
+    gold: {fn: votes}
+    wordings:
+      - '`comment` calls for the deliberate killing of an entire group of people.'
+    criteria:
+      - Strongly disagree
+      - Disagree
+      - Neither agree nor disagree
+      - Agree
+      - Strongly agree
+
+  hate_speech:
+    type: noul
+    level: 2
+    grade: 1
+    gold: {fn: python, name: hate_speech_share}
+    wordings:
+      - Is `comment` hate speech?
+      - '`comment` is hate speech.'
+    opposites:
+      - '`comment` is not hate speech.'
+      - Is `comment` free of hate speech?

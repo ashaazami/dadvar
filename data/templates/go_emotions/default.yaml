@@ -1,0 +1,27 @@
+# GoEmotions: Reddit comments, 28 emotions; single-label rows only (see `keep` in the registry).
+
+source: go_emotions
+dataset: google-research-datasets/go_emotions
+configs: [simplified]            # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+labels: [features, labels]       # which split and column hold the full label set (read before sampling)
+license: apache-2.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: apache-2.0
+keep: single_label               # drop rows the source cannot turn into a question, before sampling
+record:
+  fn: label_options
+  label_index: labels
+state:
+  comment: {from: text, role: text}
+
+questions:
+
+  emotion:
+    type: choice
+    level: 2
+    grade: 2
+    gold: {fn: choice, column: answer}
+    criteria_from: options
+    wordings:
+      - Which emotion does `comment` express?

@@ -1,0 +1,29 @@
+.venv/
+.cache/
+*.safetensors
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.DS_Store
+.env
+*.log
+
+# Local notes
+PARKED.md
+
+# Benchmark data cache and run outputs
+data/cache/
+benchmarks/results/
+
+# direnv (local only)
+.envrc
+
+# Training data and outputs
+training/data/
+training/runs/
+
+# Prediction cache
+benchmarks/cache/

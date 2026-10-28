@@ -1,0 +1,37 @@
+# Feedback-Collection: grade a response with the row's own rubric. Dataset scores 1-5 become levels
+# 0-4. The reference answer is left out: the model applies the rubric, not a comparison against an
+# answer it would have to be told scores 5.
+
+source: feedback_collection
+dataset: prometheus-eval/Feedback-Collection
+configs: [default]               # the dataset configs to load
+splits: {eval: train, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: cc-by-4.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: false                # may train a model sold commercially: responses and scores written by GPT-4
+default: false                   # left out of an `all` run unless named
+record: rubric
+state:
+  instruction: {from: orig_instruction, role: context}
+  response: {from: orig_response, role: reply}
+
+questions:
+
+  quality:
+    type: score
+    level: 6
+    grade: 4
+    gold: {fn: rating, column: orig_score, offset: -1}
+    criteria_from: rubric
+    wordings:
+      - '{{ orig_criteria }}'
+  relation:                      # asked only of a mismatched pair: yes on the original, no on the copy
+    type: noul
+    level: 3
+    grade: 3
+    form: B
+    asked: mismatch
+    gold: {fn: constant, value: true}
+    wordings:
+      - Is `response` a reply to `instruction`?
+      - Does `response` respond to what `instruction` asks?

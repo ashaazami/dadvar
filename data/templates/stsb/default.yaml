@@ -1,0 +1,32 @@
+# STS-B: sentence pairs rated 0-5 for similarity (scaled to 0-1 in this copy). Level wording follows the
+# STS annotation guidelines (Agirre et al., SemEval 2012-2017).
+
+source: stsb
+dataset: sentence-transformers/stsb
+configs: [default]               # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: unknown (STS Benchmark; GLUE lists it as other)
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: false                # may train a model sold commercially: no declared license
+default: false                   # left out of an `all` run unless named
+state:
+  sentence1: sentence1
+  sentence2: sentence2
+
+questions:
+
+  similarity:
+    type: score
+    level: 3
+    grade: 3
+    gold: {fn: score_share, column: score}
+    wordings:
+      - How similar in meaning are `sentence1` and `sentence2`?
+      - How close is the meaning of `sentence2` to that of `sentence1`?
+    criteria:
+      - On different topics.
+      - Not equivalent, but on the same topic.
+      - Not equivalent, but they share some details.
+      - Roughly equivalent, but some important information differs or is missing.
+      - Mostly equivalent, but some unimportant details differ.
+      - 'Completely equivalent: they mean the same thing.'

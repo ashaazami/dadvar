@@ -1,0 +1,105 @@
+Dadvar
+Copyright 2026 Ashkan Aazami
+
+Licensed under the Apache License, Version 2.0; see LICENSE.
+
+
+Software derived from Laya
+--------------------------
+
+This product includes software derived from Laya:
+https://github.com/NandhaKishorM/laya
+Developed by Convai Innovations and Laya contributors. Licensed under Apache-2.0.
+Source revision: 4066d5d.
+
+The decision model's design and training recipe follow Laya's: an encoder with a
+question-type embedding and transformer layers on top, one [MASK] marker per option
+scored to one logit, soft targets, and per-type temperature calibration. The
+following files are adapted from Laya's code and carry a notice at the top stating
+what they were derived from and how they were changed:
+
+  * dadvar/text.py, dadvar/sequence.py, dadvar/model.py and dadvar/batch.py, from
+    laya/common.py (option rendering, sequence construction, DecisionModel,
+    collate_items).
+  * training/finetune.py and training/prepare_data.py, in part, from
+    notebooks/laya_finetune_typed_decisions_2xT4_kaggle.ipynb (temperature fitting,
+    optimizer setup, the training item format).
+  * benchmarks/metrics.py, in part, from laya/common.py (ece_score) and the
+    evaluation in the same notebook.
+  * .github/workflows/ci.yml and .github/dependabot.yml, from Laya's.
+
+The rest of the repository (data/, the benchmark runner and diagnostics, the
+training data recipe, balancing and validation) is original to this project.
+
+
+Data formats and question wording from third parties
+----------------------------------------------------
+
+  * The row schema (id, state, questions, gold) and the gold answer format
+    follow the LocalLLaMA/typed-decisions dataset, Apache-2.0:
+    https://huggingface.co/datasets/LocalLLaMA/typed-decisions
+  * The HelpSteer attribute definitions quoted in
+    data/templates/helpsteer/_attributes.yaml are from NVIDIA's dataset cards,
+    CC-BY-4.0: https://huggingface.co/datasets/nvidia/HelpSteer2
+    The per-level wording is this project's.
+  * The STS-B level wording follows the SemEval STS annotation guidelines
+    (Agirre et al.); see data/templates/stsb/default.yaml.
+  * The request and answer shapes are TypeSafe's System One API, used through
+    the typesafe-sdk package (MIT), which is a dependency and is not included
+    here: https://github.com/typesafe-ai/typesafe-sdk-python
+
+
+Datasets
+--------
+
+No dataset content is included in this repository. Datasets are downloaded from
+Hugging Face at run time, at the revision each run records, and are used under
+their own licenses. Each source's license is declared in its own file under
+data/templates/, and docs/BENCHMARK_DATASETS.md lists them with their tasks.
+Sources marked "evaluation only" are not licensed for training here.
+
+  Anthropic/hh-rlhf                          MIT
+  LocalLLaMA/typed-decisions                 Apache-2.0
+  OpenAssistant/oasst1                       Apache-2.0
+  SetFit/amazon_reviews_multi_en             other (Multilingual Amazon Reviews Corpus terms,
+                                             non-commercial; SetFit's copy is tagged Apache-2.0)
+  SetFit/sst5                                unknown (Stanford Sentiment Treebank)
+  allenai/math_qa                            Apache-2.0
+  allenai/reward-bench                       ODC-BY
+  clinc/clinc_oos                            CC-BY-3.0
+  coastalcph/lex_glue                        CC-BY-4.0
+  deepmind/aqua_rat                          Apache-2.0
+  deepset/prompt-injections                  Apache-2.0
+  google-research-datasets/go_emotions       Apache-2.0
+  google-research-datasets/paws              PAWS terms (free for any purpose)
+  google/boolq                               CC-BY-SA-3.0 (evaluation only)
+  google/civil_comments                      CC0-1.0
+  hendrycks/ethics                           MIT
+  lmarena-ai/arena-human-preference-55k      Apache-2.0
+  mteb/amazon_counterfactual                 CC-BY-4.0
+  mteb/amazon_massive_intent                 Apache-2.0
+  mteb/amazon_massive_scenario               Apache-2.0
+  mteb/banking77                             MIT
+  mteb/summeval                              MIT (evaluation only)
+  nvidia/Aegis-AI-Content-Safety-Dataset-2.0 CC-BY-4.0
+  nvidia/HelpSteer                           CC-BY-4.0
+  nvidia/HelpSteer2                          CC-BY-4.0
+  nvidia/HelpSteer3                          CC-BY-4.0
+  nyu-mll/multi_nli                          per genre: CC-BY-3.0, CC-BY-SA-3.0, MIT, other (OANC)
+  openai/gsm8k                               MIT
+  prometheus-eval/Feedback-Collection        CC-BY-4.0
+  rajpurkar/squad_v2                         CC-BY-SA-4.0
+  sentence-transformers/stsb                 unknown (STS Benchmark; GLUE lists it as other)
+  tasksource/ruletaker                       Apache-2.0
+  tau/commonsense_qa                         MIT (evaluation only)
+  ucberkeley-dlab/measuring-hate-speech      CC-BY-4.0
+  wenhu/tab_fact                             CC-BY-4.0
+
+
+Model weights
+-------------
+
+No model weights are included in this repository. A model trained here starts
+from a pretrained encoder downloaded at run time; the default encoder is
+ModernBERT (Answer.AI, Apache-2.0):
+https://huggingface.co/answerdotai/ModernBERT-base

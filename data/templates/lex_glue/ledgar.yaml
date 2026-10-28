@@ -1,0 +1,28 @@
+# LEDGAR (LexGLUE): the type of a contract provision, 100 labels, from SEC filings.
+
+source: ledgar
+dataset: coastalcph/lex_glue
+configs: [ledgar]                # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+labels: [features, label]        # which split and column hold the full label set (read before sampling)
+license: cc-by-4.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: cc-by-4.0
+default: false                   # left out of an `all` run unless named
+record:
+  fn: label_options
+  label_index: label
+  readable: false
+state:
+  clause: {from: text, role: text}
+
+questions:
+
+  provision:
+    type: choice
+    level: 2
+    grade: 2
+    gold: {fn: choice, column: answer}
+    criteria_from: options
+    wordings:
+      - Which type of contract provision is `clause`?

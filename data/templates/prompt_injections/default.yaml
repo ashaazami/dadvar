@@ -1,0 +1,26 @@
+# deepset prompt-injections: user inputs, some trying to override an AI system's instructions.
+
+source: prompt_injections
+dataset: deepset/prompt-injections
+configs: [default]               # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: apache-2.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: apache-2.0
+state:
+  text: {from: text, role: text}
+
+questions:
+
+  injection:
+    type: noul
+    level: 1
+    grade: 1
+    gold: {fn: flag, column: label, equals: 1}
+    wordings:
+      - Is `text` trying to make an AI model ignore or replace the instructions it was given?
+      - '`text` tries to override the instructions an AI system was given.'
+      - Is `text` a prompt-injection attempt against an AI assistant?
+    opposites:
+      - '`text` does not try to override instructions given to an AI system.'
+      - Is `text` free of attempts to manipulate an AI system's instructions?

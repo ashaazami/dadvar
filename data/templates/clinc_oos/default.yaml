@@ -1,0 +1,28 @@
+# CLINC150: 150 assistant intents plus `oos`, the request none of them covers.
+
+source: clinc_oos
+dataset: clinc/clinc_oos
+configs: [plus]                  # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+labels: [features, intent]       # which split and column hold the full label set (read before sampling)
+license: cc-by-3.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: cc-by-3.0
+oversample: {fn: out_of_scope, share: 0.15}  # repeat matching training items up to this share
+record:
+  fn: label_options
+  label_index: intent
+state:
+  request: {from: text, role: text}
+
+questions:
+
+  intent:
+    type: choice
+    level: 2
+    grade: 2
+    gold: {fn: choice, column: answer}
+    criteria_from: options
+    option_refs: [oos]
+    wordings:
+      - Which intent does `request` express? Answer `oos` when none of the other options covers it.

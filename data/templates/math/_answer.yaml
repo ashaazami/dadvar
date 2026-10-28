@@ -1,0 +1,14 @@
+# The answer question shared by the multiple-choice math sources (math/aqua_rat.yaml, math/math_qa.yaml).
+# Each file's record function turns the row's options into `options` and the correct letter into `answer`.
+
+questions:
+
+  answer:
+    type: choice
+    level: 5
+    gold: {fn: choice, column: answer}
+    criteria_from: options
+    wordings:
+      - Which option is the answer to `problem`?
+      - What is the answer to `problem`?
+      - Solve `problem`. Which option is correct?

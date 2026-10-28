@@ -1,0 +1,77 @@
+# HelpSteer attributes: shared by helpsteer/v1.yaml and helpsteer/v2.yaml (`include:`).
+#
+# Attribute definitions are NVIDIA's (HelpSteer dataset cards); the per-level wording is ours.
+# Annotators rate each attribute 0-4; the gold is that rating as a level.
+
+questions:
+
+  helpfulness:
+    type: score
+    on_mismatch: lowest        # on a mismatched copy
+    level: 3
+    grade: 3                   # the response against the prompt
+    gold: rating
+    wordings:
+      - Overall helpfulness of `response` to `prompt`.
+    criteria:
+      - "Not helpful: fails the request or is unusable."
+      - "Slightly helpful: addresses little of the request."
+      - "Partially helpful: useful but with notable gaps or problems."
+      - "Mostly helpful: addresses the request with minor shortcomings."
+      - "Perfectly helpful: fully addresses the request."
+
+  correctness:
+    type: score
+    level: 3
+    grade: 3
+    gold: rating
+    wordings:
+      - Does `response` include all pertinent facts without errors?
+    criteria:
+      - Completely incorrect or missing the pertinent facts.
+      - "Mostly incorrect: major errors or omissions."
+      - "Partially correct: some errors or omissions."
+      - "Mostly correct: minor errors or omissions."
+      - "Completely correct: all pertinent facts, no errors."
+
+  coherence:
+    type: score
+    level: 1
+    grade: 1                   # the response on its own
+    gold: rating
+    wordings:
+      - How consistent and clear is the expression in `response`?
+    criteria:
+      - "Incoherent: cannot be followed."
+      - "Mostly incoherent: hard to follow."
+      - "Somewhat coherent: parts are unclear or inconsistent."
+      - "Mostly coherent: minor lapses in clarity."
+      - "Perfectly coherent: clear and self-consistent throughout."
+
+  complexity:
+    type: score
+    level: 2
+    grade: 1
+    gold: rating
+    wordings:
+      - What intellectual depth is required to write `response`?
+    criteria:
+      - "Basic: anyone with basic language competency could write it."
+      - "Simple: needs little more than everyday knowledge."
+      - "Intermediate: needs some education or familiarity with the topic."
+      - "Advanced: needs substantial knowledge of the topic."
+      - "Expert: needs deep domain expertise."
+
+  verbosity:
+    type: score
+    level: 3
+    grade: 3
+    gold: rating
+    wordings:
+      - How much detail does `response` include, relative to what `prompt` asks for?
+    criteria:
+      - "Very terse: far less detail than asked for."
+      - "Terse: less detail than asked for."
+      - "Balanced: about the detail asked for."
+      - "Verbose: more detail than asked for."
+      - "Very verbose: far more detail than asked for."

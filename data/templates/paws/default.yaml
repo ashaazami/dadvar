@@ -1,0 +1,28 @@
+# PAWS: sentence pairs with high word overlap; label 1 when they are paraphrases.
+
+source: paws
+dataset: google-research-datasets/paws
+configs: [labeled_final]         # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: paws (free for any purpose)
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: free for any purpose
+default: false                   # left out of an `all` run unless named
+state:
+  sentence1: sentence1
+  sentence2: sentence2
+
+questions:
+
+  paraphrase:
+    type: noul
+    level: 3
+    grade: 3
+    gold: {fn: flag, column: label, equals: 1}
+    wordings:
+      - Do `sentence1` and `sentence2` mean the same thing?
+      - '`sentence1` and `sentence2` have the same meaning.'
+      - Is `sentence2` a paraphrase of `sentence1`?
+    opposites:
+      - '`sentence1` and `sentence2` mean different things.'
+      - Do `sentence1` and `sentence2` differ in meaning?

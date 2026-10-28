@@ -1,0 +1,31 @@
+# RewardBench: which of two responses is better. The better one is response_a on even rows, response_b on odd.
+
+source: reward_bench
+dataset: allenai/reward-bench
+configs: [default]               # the dataset configs to load
+splits: {eval: filtered, train: filtered}  # which Hugging Face split the eval and train rows come from (null: none)
+license: odc-by
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: false                # may train a model sold commercially: responses written by commercial models whose terms may restrict training
+default: false                   # left out of an `all` run unless named
+record:
+  fn: pair_by_parity
+  chosen: chosen
+  rejected: rejected
+state:
+  prompt: prompt
+  response_a: response_a
+  response_b: response_b
+
+questions:
+
+  better:
+    type: choice
+    level: 3
+    grade: 3
+    gold: {fn: choice, column: better}
+    wordings:
+      - Which response answers `prompt` better?
+    criteria:
+      a: response_a
+      b: response_b

@@ -1,0 +1,42 @@
+# SQuAD 2.0: about half the questions have no answer in their passage. The extraction question offers
+# the answers to other questions about the same passage as the wrong options, plus "not stated".
+
+source: squad_v2
+dataset: rajpurkar/squad_v2
+configs: [default]               # the dataset configs to load
+splits: {eval: validation, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: cc-by-sa-4.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: false                # may train a model sold commercially: cc-by-sa-4.0: share-alike
+default: false                   # left out of an `all` run unless named
+prepare: squad_prepare           # reshape the whole split first
+record: squad
+state:
+  passage: context
+  question: question
+
+questions:
+
+  answerable:
+    type: noul
+    level: 4
+    grade: 3
+    form: B
+    gold: {fn: noul, column: answerable}
+    wordings:
+      - Does `passage` answer `question`?
+      - '`passage` contains the answer to `question`.'
+      - Can `question` be answered from `passage`?
+    opposites:
+      - '`passage` does not answer `question`.'
+
+  answer:
+    type: choice
+    level: 4
+    grade: 5
+    gold: {fn: choice, column: answer}
+    criteria_from: options
+    applies_if: options
+    wordings:
+      - According to `passage`, which option answers `question`?
+      - Which option does `passage` give as the answer to `question`?

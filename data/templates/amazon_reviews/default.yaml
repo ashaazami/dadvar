@@ -1,0 +1,44 @@
+# Amazon reviews: SetFit's English slice of the Multilingual Amazon Reviews Corpus.
+# `label` 0-4 is the review's 1-5 stars.
+
+source: amazon_reviews
+dataset: SetFit/amazon_reviews_multi_en
+configs: [default]               # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: other (Multilingual Amazon Reviews Corpus terms, non-commercial; SetFit's copy is tagged apache-2.0)
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: false                # may train a model sold commercially: Multilingual Amazon Reviews Corpus terms: non-commercial
+default: false                   # left out of an `all` run unless named
+
+state:
+  review: {from: text, role: text}
+
+questions:
+
+  stars:
+    type: score
+    level: 1
+    grade: 1
+    gold: {fn: rating, column: label}
+    wordings:
+      - How many stars would the author of `review` give?
+      - What star rating fits `review`?
+      - How satisfied is the author of `review`?
+    criteria:
+      - "1 star: very dissatisfied"
+      - "2 stars: dissatisfied"
+      - "3 stars: mixed or neutral"
+      - "4 stars: satisfied"
+      - "5 stars: very satisfied"
+
+  positive:
+    type: noul
+    level: 1
+    grade: 1
+    # 3 stars is mixed: neither a yes nor a no
+    gold: {fn: share_by_value, column: label, values: [0.0, 0.0, 0.5, 1.0, 1.0]}
+    wordings:
+      - Is `review` positive overall?
+      - "`review` is positive overall."
+    opposites:
+      - "`review` is not positive overall."

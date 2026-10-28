@@ -1,0 +1,28 @@
+# HelpSteer (v1): a prompt and one response, rated on five attributes.
+
+source: helpsteer_v1
+dataset: nvidia/HelpSteer
+configs: [default]               # the dataset configs to load
+splits: {eval: validation, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: cc-by-4.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: cc-by-4.0
+default: false                   # left out of an `all` run unless named
+include: _attributes.yaml
+
+state:
+  prompt: {from: prompt, role: context}
+  response: {from: response, role: reply}
+
+questions:                       # the five attributes come from _attributes.yaml
+
+  relation:                      # asked only of a mismatched pair: yes on the original, no on the copy
+    type: noul
+    level: 3
+    grade: 3
+    form: B
+    asked: mismatch
+    gold: {fn: constant, value: true}
+    wordings:
+      - Is `response` a reply to `prompt`?
+      - Does `response` respond to what `prompt` asks?

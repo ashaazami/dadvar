@@ -1,0 +1,68 @@
+# SummEval: held out, evaluation only. One row per machine summary, with its four expert ratings (1-5).
+
+source: summeval
+dataset: mteb/summeval
+configs: [default]               # the dataset configs to load
+splits: {eval: test, train: null}  # which Hugging Face split the eval and train rows come from (null: none)
+license: mit
+use: {benchmark: true, train: false}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: mit
+default: false                   # left out of an `all` run unless named
+prepare: summeval_prepare        # reshape the whole split first
+state:
+  article: article
+  summary: summary
+
+questions:
+
+  coherence:
+    type: score
+    level: 1
+    gold: {fn: score_share, scale: [1, 5]}
+    wordings:
+      - How well does `summary` read as a coherent, well-structured text?
+    criteria:
+      - Very poor
+      - Poor
+      - Fair
+      - Good
+      - Excellent
+
+  consistency:
+    type: score
+    level: 4
+    gold: {fn: score_share, scale: [1, 5]}
+    wordings:
+      - How consistent is `summary` with the facts in `article`, with nothing unsupported or contradicted?
+    criteria:
+      - Very poor
+      - Poor
+      - Fair
+      - Good
+      - Excellent
+
+  fluency:
+    type: score
+    level: 1
+    gold: {fn: score_share, scale: [1, 5]}
+    wordings:
+      - 'How fluent is `summary`: grammatical and easy to read?'
+    criteria:
+      - Very poor
+      - Poor
+      - Fair
+      - Good
+      - Excellent
+
+  relevance:
+    type: score
+    level: 3
+    gold: {fn: score_share, scale: [1, 5]}
+    wordings:
+      - How well does `summary` capture the important content of `article`?
+    criteria:
+      - Very poor
+      - Poor
+      - Fair
+      - Good
+      - Excellent

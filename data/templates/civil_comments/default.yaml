@@ -1,0 +1,76 @@
+# Civil Comments: comments with the share of annotators who flagged each attribute (0-1), used as a soft
+# yes. Only comments someone flagged are kept (see `keep` in the registry).
+
+source: civil_comments
+dataset: google/civil_comments
+configs: [default]               # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: cc0-1.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: cc0-1.0
+default: false                   # left out of an `all` run unless named
+keep: any_attribute_flagged      # drop rows the source cannot turn into a question, before sampling
+state:
+  comment: {from: text, role: text}
+
+questions:
+
+  toxic:
+    type: noul
+    level: 1
+    grade: 1
+    gold: {fn: share, column: toxicity}
+    wordings:
+      - Is `comment` rude, disrespectful or unreasonable enough to make someone leave a discussion?
+      - '`comment` is rude, disrespectful or unreasonable.'
+    opposites:
+      - '`comment` is free of rude or disrespectful language.'
+      - Is `comment` civil and respectful?
+
+  insult:
+    type: noul
+    level: 1
+    grade: 1
+    gold: {fn: share, column: insult}
+    wordings:
+      - Is `comment` insulting, inflammatory or negative towards a person or a group of people?
+      - '`comment` insults a person or a group of people.'
+    opposites:
+      - '`comment` contains no insult towards anyone.'
+      - Is `comment` free of insults?
+
+  obscene:
+    type: noul
+    level: 1
+    grade: 1
+    gold: {fn: share, column: obscene}
+    wordings:
+      - Does `comment` contain swear words, curse words or other obscene or profane language?
+      - '`comment` uses obscene or profane language.'
+    opposites:
+      - '`comment` contains no swear words or profanity.'
+      - Is `comment` free of obscene language?
+
+  threat:
+    type: noul
+    level: 1
+    grade: 1
+    gold: {fn: share, column: threat}
+    wordings:
+      - Does `comment` express an intention to inflict pain, injury or violence against someone?
+      - '`comment` threatens someone with harm or violence.'
+    opposites:
+      - '`comment` contains no threat of harm against anyone.'
+      - Is `comment` free of threats?
+
+  identity_attack:
+    type: noul
+    level: 1
+    grade: 1
+    gold: {fn: share, column: identity_attack}
+    wordings:
+      - Is `comment` negative or hateful towards someone because of who they are, such as their race, religion, gender or sexual orientation?
+      - '`comment` attacks people because of their race, religion, gender or sexual orientation.'
+    opposites:
+      - '`comment` does not attack anyone for who they are.'
+      - Is `comment` free of attacks on people's identity?

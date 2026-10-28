@@ -1,0 +1,47 @@
+# RuleTaker: facts and rules in plain English, and a statement that does or does not follow.
+# Rows are grouped by depth (the `config` column); training keeps depths 0 and 1 only (`train_keep:`).
+
+source: ruletaker
+dataset: tasksource/ruletaker
+configs: [default]               # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: apache-2.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: apache-2.0
+default: false                   # left out of an `all` run unless named
+row_source: ruletaker/{{ config }}
+fields:
+  statement: question
+train_keep: {config: [depth-0, depth-1]} # training rows only: one-step rule application
+
+state:
+  facts_and_rules: context
+
+questions:
+
+  claim:
+    type: noul
+    level: 6
+    grade: 4
+    form: A
+    gold: {fn: flag, column: label, equals: entailment}
+    wordings:
+      - '{{ statement }}'
+      - 'It follows from `facts_and_rules` that: {{ statement }}'
+    opposites:
+      - '`facts_and_rules` do not establish that: {{ statement }}'
+      - 'It cannot be concluded from `facts_and_rules` that: {{ statement }}'
+
+  follows:
+    type: noul
+    level: 6
+    grade: 4
+    form: B
+    canonical: false
+    gold: {fn: flag, column: label, equals: entailment}
+    state_extra: {claim: statement}
+    wordings:
+      - '`claim` follows from `facts_and_rules`.'
+      - Does `claim` follow from `facts_and_rules`?
+    opposites:
+      - '`claim` does not follow from `facts_and_rules`.'

@@ -1,0 +1,82 @@
+# Adapted from .github/workflows/ci.yml in Laya (https://github.com/NandhaKishorM/laya) at 4066d5d, Apache-2.0. See NOTICE.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # transformers probes for TensorFlow at import; when TF is present its abseil runtime can
+  # deadlock model construction. Dadvar is torch-only.
+  USE_TF: "0"
+  USE_TORCH: "1"
+  TOKENIZERS_PARALLELISM: "false"
+
+jobs:
+  test:
+    name: import (py${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          # CPU-only torch keeps the job under a minute instead of pulling CUDA wheels
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e .
+
+      - name: Import check
+        run: python -c "import dadvar.model, dadvar.sequence, dadvar.text, dadvar.batch"
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - run: pip install ruff black
+      - name: Ruff
+        run: ruff check dadvar/ benchmarks/ data/ training/
+      - name: Black
+        run: black --check dadvar/ benchmarks/ data/ training/
+      - name: Byte-compile every module
+        run: python -m compileall -q dadvar/ benchmarks/ data/ training/
+
+  build:
+    name: package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - run: pip install build twine
+      - run: python -m build
+      - name: Validate metadata
+        run: python -m twine check dist/*
+      - name: Version must match the tag on a release
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          pkg=$(python -c "import re;print(re.search(r'version = \"(.*)\"', open('pyproject.toml').read()).group(1))")
+          tag="${GITHUB_REF_NAME#v}"
+          test "$pkg" = "$tag" || { echo "pyproject $pkg != tag $tag"; exit 1; }
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/

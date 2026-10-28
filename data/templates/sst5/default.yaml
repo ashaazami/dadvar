@@ -1,0 +1,29 @@
+# SST-5: movie-review sentences, five sentiment classes.
+
+source: sst5
+dataset: SetFit/sst5
+configs: [default]               # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: unknown (Stanford Sentiment Treebank)
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: false                # may train a model sold commercially: no declared license
+default: false                   # left out of an `all` run unless named
+state:
+  sentence: {from: text, role: text}
+
+questions:
+
+  sentiment:
+    type: score
+    level: 1
+    grade: 1
+    gold: {fn: rating, column: label}
+    wordings:
+      - What is the sentiment of `sentence`?
+      - How positive or negative is `sentence`?
+    criteria:
+      - Very negative
+      - Negative
+      - Neutral or mixed
+      - Positive
+      - Very positive

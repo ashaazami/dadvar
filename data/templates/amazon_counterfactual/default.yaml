@@ -1,0 +1,28 @@
+# Amazon counterfactual: review sentences; label 1 when the sentence is counterfactual.
+
+source: amazon_counterfactual
+dataset: mteb/amazon_counterfactual
+configs: [en]                    # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: cc-by-4.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: cc-by-4.0
+default: false                   # left out of an `all` run unless named
+row_source: amazon_counterfactual/{{ hf_config }}
+state:
+  review: {from: text, role: text}
+
+questions:
+
+  counterfactual:
+    type: noul
+    level: 2
+    grade: 1
+    gold: {fn: flag, column: label, equals: 1}
+    wordings:
+      - Does `review` describe something that did not or could not happen, such as a wish or a hypothetical?
+      - '`review` talks about something that did not happen, such as a wish or a hypothetical.'
+      - Is `review` a counterfactual statement?
+    opposites:
+      - '`review` only describes things that actually happened.'
+      - Does `review` stick to what actually happened, with no wishes or hypotheticals?

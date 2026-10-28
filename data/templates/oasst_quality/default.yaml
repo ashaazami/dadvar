@@ -1,0 +1,88 @@
+# OpenAssistant (oasst1): English assistant replies that reviewers rated, each with the whole
+# conversation before it. Ratings are 0-1 averages, split between the two nearest levels.
+
+source: oasst_quality
+dataset: OpenAssistant/oasst1
+configs: [default]               # the dataset configs to load
+splits: {eval: validation, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: apache-2.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: apache-2.0
+default: false                   # left out of an `all` run unless named
+prepare: oasst_conversation_prepare  # reshape the whole split first
+record: oasst
+state:
+  conversation: {from: conversation, role: context}
+  response: {from: text, role: reply}
+
+questions:
+
+  quality:
+    type: score
+    on_mismatch: lowest        # on a mismatched copy
+    level: 3
+    grade: 3
+    gold: {fn: score_share}
+    wordings:
+      - Overall quality of `response` as the next reply in `conversation`.
+      - How good is `response` as a reply to `conversation`?
+    criteria:
+      - Very poor
+      - Poor
+      - Acceptable
+      - Good
+      - Excellent
+
+  helpfulness:
+    type: score
+    on_mismatch: lowest        # on a mismatched copy
+    level: 3
+    grade: 3
+    gold: {fn: score_share}
+    wordings:
+      - How helpful is `response` to the person asking in `conversation`?
+      - How much does `response` help with what `conversation` asks for?
+    criteria:
+      - Not helpful
+      - Slightly helpful
+      - Somewhat helpful
+      - Helpful
+      - Very helpful
+
+  creativity:
+    type: score
+    level: 1
+    grade: 1
+    gold: {fn: score_share}
+    wordings:
+      - How creative is `response`?
+      - How original and imaginative is `response`?
+    criteria:
+      - 'Not creative: formulaic'
+      - Slightly creative
+      - Somewhat creative
+      - Creative
+      - 'Very creative: original and imaginative'
+
+  fails_task:
+    type: noul
+    on_mismatch: affirm        # on a mismatched copy
+    level: 4
+    grade: 3
+    gold: {fn: share}
+    wordings:
+      - Does `response` fail to do what the last message in `conversation` asked for?
+      - '`response` fails to do what was asked in `conversation`.'
+    opposites:
+      - '`response` does what the last message in `conversation` asked for.'
+      - Does `response` accomplish the task asked for in `conversation`?
+  relation:                      # asked only of a mismatched pair: yes on the original, no on the copy
+    type: noul
+    level: 3
+    grade: 3
+    form: B
+    asked: mismatch
+    gold: {fn: constant, value: true}
+    wordings:
+      - Is `response` a reply to the last message in `conversation`?
+      - Does `response` respond to what `conversation` asks for?

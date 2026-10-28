@@ -1,0 +1,27 @@
+# Amazon MASSIVE: voice-assistant utterances; scenario labels. One config per language.
+
+source: massive_scenario
+dataset: mteb/amazon_massive_scenario
+configs: [en, de, fr, es, ru, ar, hi, zh-CN, ja, ko, th, sw]  # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+labels: [train, label_text, en]  # which split and column hold the full label set (read before sampling)
+license: apache-2.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: apache-2.0
+row_source: massive_scenario/{{ hf_config }}
+record:
+  fn: label_options
+  label: label_text
+state:
+  utterance: {from: text, role: text}
+
+questions:
+
+  scenario:
+    type: choice
+    level: 2
+    grade: 2
+    gold: {fn: choice, column: answer}
+    criteria_from: options
+    wordings:
+      - Which scenario does the voice-assistant request `utterance` belong to?

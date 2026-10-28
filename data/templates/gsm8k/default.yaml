@@ -1,0 +1,40 @@
+# GSM8K: grade-school math problems. The worked answer ends '#### N'; a wrong candidate is derived
+# from N by a seeded, plausible slip, so every problem asks one true and one false statement.
+
+source: gsm8k
+dataset: openai/gsm8k
+configs: [main]                  # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: mit
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: mit
+default: false                   # left out of an `all` run unless named
+record: gsm8k
+train: false                     # benchmark only: multi-step, not a one-step judgment
+
+state:
+  problem: question
+
+questions:
+
+  right_answer:
+    type: noul
+    level: 5
+    form: A
+    gold: {fn: constant, value: true}
+    wordings:
+      - The answer to `problem` is {{ final_answer }}.
+      - Is {{ final_answer }} the answer to `problem`?
+    opposites:
+      - The answer to `problem` is not {{ final_answer }}.
+
+  wrong_answer:
+    type: noul
+    level: 5
+    form: A
+    gold: {fn: constant, value: false}
+    wordings:
+      - The answer to `problem` is {{ wrong_answer }}.
+      - Is {{ wrong_answer }} the answer to `problem`?
+    opposites:
+      - The answer to `problem` is not {{ wrong_answer }}.

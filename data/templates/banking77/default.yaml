@@ -1,0 +1,26 @@
+# Banking77: online-banking customer messages, 77 intents.
+
+source: banking77
+dataset: mteb/banking77
+configs: [default]               # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+labels: [test, label_text]       # which split and column hold the full label set (read before sampling)
+license: mit
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: mit
+record:
+  fn: label_options
+  label: label_text
+state:
+  message: {from: text, role: text}
+
+questions:
+
+  intent:
+    type: choice
+    level: 2
+    grade: 2
+    gold: {fn: choice, column: answer}
+    criteria_from: options
+    wordings:
+      - What is the customer asking the bank for in `message`?

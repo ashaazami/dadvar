@@ -1,0 +1,31 @@
+# LMArena human preference: a real head-to-head vote, including ties. Prompts and responses are
+# turn lists, joined into one text; the dataset's own order is kept, since the votes belong to the
+# positions the voters saw.
+
+source: arena_preference
+dataset: lmarena-ai/arena-human-preference-55k
+configs: [default]               # the dataset configs to load
+splits: {eval: train, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: apache-2.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: false                # may train a model sold commercially: responses written by commercial models whose terms may restrict training
+default: false                   # left out of an `all` run unless named
+record: arena
+state:
+  prompt: prompt_text
+  response_a: response_a_text
+  response_b: response_b_text
+
+questions:
+
+  preferred:
+    type: choice
+    level: 3
+    grade: 3
+    gold: {fn: choice, column: winner}
+    wordings:
+      - Which response to `prompt` would a person prefer?
+    criteria:
+      a: response_a is better
+      b: response_b is better
+      tie: neither is better

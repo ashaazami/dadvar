@@ -1,0 +1,31 @@
+# Anthropic HH-RLHF: two transcripts that share the conversation and differ in the last assistant
+# reply. The preferred reply is reply_a on even rows, reply_b on odd, so position carries no signal.
+
+source: hh_rlhf
+dataset: Anthropic/hh-rlhf
+configs: [default]               # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: mit
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: mit
+default: false                   # left out of an `all` run unless named
+keep: two_assistant_turns        # drop rows the source cannot turn into a question, before sampling
+record: hh_rlhf
+state:
+  conversation: conversation
+  reply_a: reply_a
+  reply_b: reply_b
+
+questions:
+
+  better:
+    type: choice
+    level: 3
+    grade: 3
+    gold: {fn: choice, column: better}
+    wordings:
+      - Which reply would a person prefer as the next turn of `conversation`?
+      - Which is the better next reply in `conversation`?
+    criteria:
+      a: '`reply_a` is better'
+      b: '`reply_b` is better'

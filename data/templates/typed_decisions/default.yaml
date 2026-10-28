@@ -1,0 +1,34 @@
+# typed-decisions: agent decisions already in the TypeSafe request format. Each row carries its
+# own state (one per workflow) and its own questions and gold, so there is nothing to template: the
+# row builder `typed_decisions` (sources.py) renames the gold to the SDK's answer fields.
+
+source: typed_decisions
+dataset: LocalLLaMA/typed-decisions
+configs: [all]                   # the dataset configs to load
+splits: {eval: test, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: apache-2.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: apache-2.0; labels from a ~4B teacher model
+rows: typed_decisions
+levels:
+  category: 2
+  churn_risk: 2
+  needs_human: 4
+  needs_review: 4
+  outcome: 4
+  true_positive: 4
+  credential_compromise: 4
+  risk: 4
+  urgency: 4
+  severity: 4
+  duplicate: 5
+  matches_order: 5
+  discrepancy_severity: 5
+  action: 6
+  disposition: 6
+grades:
+  category: 2                    # a choice over a taxonomy of options
+  churn_risk: 1                  # one property of one text, on described levels
+  duplicate: 3                   # a relation between two parts of the state
+  matches_order: 3               # likewise
+  '*': 4                         # judged against the workflow's rule, policy or rubric

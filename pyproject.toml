@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dadvar"
+version = "0.2.0"
+description = "Training data, training and evaluation for System One decision models: public datasets in the TypeSafe System One schema, a calibrated decision model, and a benchmark for local and hosted models"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Ashkan Aazami" }
+]
+keywords = ["system-one", "decision-model", "training", "dataset", "benchmark", "evaluation", "typed-decisions", "calibration", "typesafe"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# The installable package is the model: torch, transformers for the encoder and its tokenizer,
+# safetensors for the weights. Everything the benchmark and the dataset layer need is in `bench`.
+dependencies = [
+    "torch>=2.0.0",
+    "transformers>=4.48.0",
+    "safetensors>=0.4.0",
+]
+
+[project.optional-dependencies]
+bench = [
+    "datasets>=3.0",
+    "huggingface_hub>=0.20.0",
+    "numpy>=1.20.0",
+    "typesafe-sdk>=0.7",
+    "pyyaml>=6.0",
+    "jinja2>=3.1",
+]
+dev = ["black>=24.0", "ruff>=0.5"]
+
+[tool.setuptools]
+# Only the runtime is a distributable package; `data` and `benchmarks` are run from a clone
+# (`python -m benchmarks.run`) and their names are too generic to install.
+packages = ["dadvar"]
+
+[project.urls]
+Repository = "https://github.com/ashaazami/dadvar"
+Issues = "https://github.com/ashaazami/dadvar/issues"
+
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E9", "F", "B", "W"]
+ignore = ["B905"]                    # zip(strict=...): lengths are checked where they matter

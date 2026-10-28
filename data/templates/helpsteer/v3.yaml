@@ -1,0 +1,33 @@
+# HelpSteer3 preference: how much better one response is, on the dataset's -3..3 scale (levels 0-6).
+
+source: helpsteer3
+dataset: nvidia/HelpSteer3
+configs: [preference]            # the dataset configs to load
+splits: {eval: validation, train: train}  # which Hugging Face split the eval and train rows come from (null: none)
+license: cc-by-4.0
+use: {benchmark: true, train: true}  # what this source may be used for; the builder enforces it
+commercial: true                 # may train a model sold commercially: cc-by-4.0
+default: false                   # left out of an `all` run unless named
+row_source: helpsteer3/{{ domain }}
+state:
+  conversation: context
+  response_1: response1
+  response_2: response2
+
+questions:
+
+  preference:
+    type: score
+    level: 3
+    grade: 3
+    gold: {fn: rating, column: overall_preference, offset: 3}
+    wordings:
+      - Which response continues `conversation` better, and by how much?
+    criteria:
+      - response 1 is much better
+      - response 1 is better
+      - response 1 is slightly better
+      - neither response is better
+      - response 2 is slightly better
+      - response 2 is better
+      - response 2 is much better
