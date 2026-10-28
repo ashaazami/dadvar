@@ -213,7 +213,7 @@ class JevModel(Model):
     backend = "jev"
     warmup = 1
     cost_per_input_token = 0.042 / 1e6  # https://docs.typesafe.ai/models
-    default_model = "jev-1.13.0"  # pinned: `jev-latest` can move to another version
+    default_model = "jev-1.14.0"  # pinned: `jev-latest` can move to another version
 
     def __init__(self, model=None, **_):
         from typesafe_sdk import TypeSafeClient

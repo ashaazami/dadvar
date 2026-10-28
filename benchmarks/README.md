@@ -26,7 +26,7 @@ python -m benchmarks.report --runs RUN_A RUN_B --group "mine=banking77,boolq" --
 | Backend | What it runs | Needs |
 |---|---|---|
 | `dadvar-model` (default) | a model trained by `training/finetune.py`: `--model` is its `model/` folder | the folder; `--device` cpu, mps or cuda |
-| `jev` | TypeSafe's hosted model, pinned to `jev-1.13.0` (`--model` picks another version) | `TYPESAFE_API_KEY`; billed per input token |
+| `jev` | TypeSafe's hosted model, pinned to `jev-1.14.0` (`--model` picks another version) | `TYPESAFE_API_KEY`; billed per input token |
 
 Adding one is a subclass of `Model` in `models.py` with a `system_one` method, plus `@register`.
 Set `model_id`, `model_version` and `settings` correctly: they are part of the cache key, so a

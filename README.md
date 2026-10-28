@@ -5,7 +5,48 @@
 Training data, training and evaluation for **System One** decision models: models that answer a
 structured question about a structured state in one pass, with a calibrated probability over the
 answers. Requests and answers use the [TypeSafe System One](https://docs.typesafe.ai/concepts/system-one)
-schema, with three question types:
+schema.
+
+## Early results
+
+A first, small experiment: one model, **Dadvar v1-base** (ModernBERT-base, 164M parameters), trained
+for a single epoch on dataset v1 (about 3 hours on a laptop, Apple M5 Pro), and compared with TypeSafe's
+hosted **Jev 1.14.0** on the same evaluation rows, which Dadvar did not train on (seed 13, up to 500
+rows per source). It is a limited test, not a thorough evaluation: nine sources, one training run, one
+sample of rows, and no error bars.
+
+| Source | Task | Questions | Dadvar v1-base | Jev 1.14.0 |
+|---|---|---|---|---|
+| helpsteer2 | rate a response 0–4 on five attributes | 2,235 | 0.553 | 0.452 |
+| go_emotions | which emotion a comment expresses (28) | 500 | 0.564 | 0.328 |
+| prompt_injections | is this a prompt injection | 116 | 0.853 | 0.724 |
+| massive_scenario (en) | which scenario an assistant request is about (18) | 500 | 0.830 | 0.756 |
+| massive_intent (en) | which intent (60) | 500 | 0.748 | 0.814 |
+| banking77 | which banking intent (77) | 500 | 0.712 | 0.782 |
+| typed_decisions | agent, support, invoice and security decisions | 2,000 | 0.653 | 0.739 |
+| clinc_oos | which intent (151) | 500 | 0.666 | 0.918 |
+| boolq | yes/no reading comprehension (not in Dadvar's training) | 500 | 0.606 | 0.938 |
+
+Accuracy. Jev is ahead on most of these, and far ahead outside English (Dadvar v1-base was trained on
+English only and averages 0.30 on MASSIVE's twelve languages, against 0.75 for Jev) and on tasks unlike
+its training data, such as boolq. The small model trained here does about as well or better on a few
+sources close to its training data: the rating questions of helpsteer2, go_emotions, prompt_injections
+and English MASSIVE scenarios. On those English sources its calibration error was also lower (0.04–0.14,
+against up to 0.35 for Jev), and it ran at a median 27 ms per row locally, against 118 ms for Jev over
+its API. Each source's sample is small (116 rows for prompt_injections), so differences of a few points
+may not hold up. Details are in [`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md) and
+[`docs/results/`](docs/results/).
+
+> [!WARNING]
+> **Treat these numbers with caution.** This is early work, and the code may still have bugs that
+> affect the results. The data has not been checked by hand either: the questions and gold answers are
+> generated from each dataset's labels by the templates in `data/`, and no manual review or spot check
+> of samples from the training, validation or evaluation rows has been done yet. Some questions may be
+> badly worded and some gold answers wrong, which would affect both training and the scores above.
+
+## Overview
+
+Three question types:
 
 | Type | Asks | Answer |
 |---|---|---|

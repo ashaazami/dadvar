@@ -27,3 +27,4 @@ training/runs/
 
 # Prediction cache
 benchmarks/cache/
+benchmarks/logs/
