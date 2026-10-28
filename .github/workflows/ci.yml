@@ -19,7 +19,7 @@ env:
 
 jobs:
   test:
-    name: import (py${{ matrix.python }})
+    name: tests (py${{ matrix.python }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -37,10 +37,13 @@ jobs:
           python -m pip install --upgrade pip
           # CPU-only torch keeps the job under a minute instead of pulling CUDA wheels
           pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install -e .
+          pip install -e '.[bench,dev]'
 
-      - name: Import check
-        run: python -c "import dadvar.model, dadvar.sequence, dadvar.text, dadvar.batch"
+      - name: Tests (offline)
+        env:
+          HF_HUB_OFFLINE: "1"
+          HF_DATASETS_OFFLINE: "1"
+        run: pytest -q tests
 
   lint:
     name: lint
@@ -52,11 +55,11 @@ jobs:
           python-version: "3.11"
       - run: pip install ruff black
       - name: Ruff
-        run: ruff check dadvar/ benchmarks/ data/ training/
+        run: ruff check dadvar/ benchmarks/ data/ training/ tests/
       - name: Black
-        run: black --check dadvar/ benchmarks/ data/ training/
+        run: black --check dadvar/ benchmarks/ data/ training/ tests/
       - name: Byte-compile every module
-        run: python -m compileall -q dadvar/ benchmarks/ data/ training/
+        run: python -m compileall -q dadvar/ benchmarks/ data/ training/ tests/
 
   build:
     name: package

@@ -42,7 +42,7 @@ bench = [
     "pyyaml>=6.0",
     "jinja2>=3.1",
 ]
-dev = ["black>=24.0", "ruff>=0.5"]
+dev = ["black>=24.0", "ruff>=0.5", "pytest>=8.0"]
 
 [tool.setuptools]
 # Only the runtime is a distributable package; `data` and `benchmarks` are run from a clone
@@ -64,3 +64,7 @@ target-version = "py310"
 [tool.ruff.lint]
 select = ["E9", "F", "B", "W"]
 ignore = ["B905"]                    # zip(strict=...): lengths are checked where they matter
+
+[tool.pytest.ini_options]
+pythonpath = ["."]                   # benchmarks, data and training run from the clone, not installed
+testpaths = ["tests"]

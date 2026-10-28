@@ -120,11 +120,12 @@ questions into answers with a model trained here.
 
 ```bash
 pip install -e '.[bench,dev]'
-black dadvar benchmarks data training         # formatting, line length 120 (pyproject.toml)
-ruff check dadvar benchmarks data training
+black dadvar benchmarks data training tests   # formatting, line length 120 (pyproject.toml)
+ruff check dadvar benchmarks data training tests
+pytest tests                                  # offline: a word-level tokenizer and a tiny encoder
 ```
 
-CI runs both, an import check on Python 3.10–3.13, and a package build.
+CI runs all three, the tests on Python 3.10, 3.11 and 3.13, and a package build.
 
 ## Background
 
